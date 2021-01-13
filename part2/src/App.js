@@ -26,7 +26,7 @@ const Persons = ({persons, filter}) => {
             {
                 persons
                     .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-                    .map(person => <Person person={person}/>)
+                    .map(person => <Person key={person.name} person={person}/>)
             }
         </div>
     )
