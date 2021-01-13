@@ -1,41 +1,11 @@
-import React, { useState } from 'react'
-
-const Form = ({newName, handleNameChange, newPhone, handlePhoneChange, submitNewPhone}) => {
-    return (
-        <form onSubmit={submitNewPhone}>
-            <div>name: <input value={newName} onChange={handleNameChange}/></div>
-            <div>number: <input value={newPhone} onChange={handlePhoneChange}/></div>
-            <div><button type="submit">add</button></div>
-        </form>
-    )
-}
-
-const Filter = ({handleFilterChange}) => {
-    return (<div>filter on <input onChange={handleFilterChange}/></div>)
-}
-
-const Person = ({person}) => {
-    return(
-        <div>{person.name} {person.phone}</div>
-    )
-}
-
-const Persons = ({persons, filter}) => {
-    return (
-        <div>
-            {
-                persons
-                    .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-                    .map(person => <Person key={person.name} person={person}/>)
-            }
-        </div>
-    )
-}
+import React, { useState, useEffect } from 'react'
+import Form from './components/Form'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
+import axios from 'axios'
 
 const App = () => {
-    const [ persons, setPersons ] = useState([
-        { name: 'Arto Hellas', phone: '123' }
-    ])
+    const [ persons, setPersons ] = useState([])
     const [ newName, setNewName ] = useState('')
     const [ newPhone, setNewPhone ] = useState('')
     const [ filter, setFilter ] = useState('')
@@ -55,6 +25,11 @@ const App = () => {
             setNewPhone('')
         }
     }
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/persons')
+            .then(response => setPersons(response.data))
+    }, [])
 
     return (
         <div>
