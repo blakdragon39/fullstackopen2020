@@ -27,13 +27,26 @@ const App = () => {
                     setNewName('')
                     setNewPhone('')
                 })
+                .catch(error => alert(error))
 
+        }
+    }
+
+    const deletePerson = (deletePerson) => {
+        const confirmDelete = window.confirm(`Delete ${deletePerson.name}?`)
+        if (confirmDelete) {
+            phonebookService.deletePerson(deletePerson)
+                .then(response => {
+                    setPersons(persons.filter(person => person.id !== deletePerson.id))
+                })
+                .catch(error => alert(error))
         }
     }
 
     useEffect(() => {
         phonebookService.getAll()
-            .then(response => setPersons(response.data))
+            .then(persons => setPersons(persons))
+            .catch(error => alert(error))
     }, [])
 
     return (
@@ -48,7 +61,7 @@ const App = () => {
                 handlePhoneChange={handlePhoneChange}
                 submitNewPhone={submitNewName}/>
             <h2>Numbers</h2>
-            <Persons persons={persons} filter={filter}/>
+            <Persons persons={persons} filter={filter} handleDelete={deletePerson}/>
         </div>
     )
 }
