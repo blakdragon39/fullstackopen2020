@@ -14,21 +14,40 @@ const App = () => {
     const handlePhoneChange = (event) => setNewPhone(event.target.value)
     const handleFilterChange = (event) => setFilter(event.target.value)
 
-    const submitNewName = (event) => {
-        event.preventDefault()
+    const addPerson = () => {
+        const newPerson = {name: newName, number: newPhone}
+        phonebookService.addPerson(newPerson)
+            .then(newPerson => {
+                setPersons(persons.concat(newPerson))
+                setNewName('')
+                setNewPhone('')
+            })
+            .catch(error => alert(error))
+    }
 
-        if (persons.find(person => person.name === newName)) {
-            alert(`${newName} is already in the phonebook`)
-        } else {
-            const newPerson = {name: newName, number: newPhone}
-            phonebookService.addPerson(newPerson)
-                .then(response => {
-                    setPersons(persons.concat(response.data))
+    const updatePerson = (existingPerson) => {
+        const shouldUpdatePerson = window.confirm(
+            `${existingPerson.name} is already in the phonebook. Replace the old number with a new one?`)
+        if (shouldUpdatePerson) {
+            const newPerson = { ...existingPerson, number: newPhone }
+            phonebookService.updatePerson(newPerson)
+                .then(updatedPerson => {
+                    setPersons(persons.map(person => person.id === updatedPerson.id ? newPerson : person))
                     setNewName('')
                     setNewPhone('')
                 })
                 .catch(error => alert(error))
+        }
+    }
 
+    const submitNewName = (event) => {
+        event.preventDefault()
+
+        const existingPerson = persons.find(person => person.name === newName)
+        if (existingPerson) {
+            updatePerson(existingPerson)
+        } else {
+            addPerson()
         }
     }
 
@@ -36,9 +55,7 @@ const App = () => {
         const confirmDelete = window.confirm(`Delete ${deletePerson.name}?`)
         if (confirmDelete) {
             phonebookService.deletePerson(deletePerson)
-                .then(response => {
-                    setPersons(persons.filter(person => person.id !== deletePerson.id))
-                })
+                .then(_ => setPersons(persons.filter(person => person.id !== deletePerson.id)))
                 .catch(error => alert(error))
         }
     }
