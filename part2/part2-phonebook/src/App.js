@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
-import axios from 'axios'
+import phonebookService from './services/phonebook'
 
 const App = () => {
     const [ persons, setPersons ] = useState([])
@@ -20,15 +20,33 @@ const App = () => {
         if (persons.find(person => person.name === newName)) {
             alert(`${newName} is already in the phonebook`)
         } else {
-            setPersons(persons.concat({name: newName, phone: newPhone}))
-            setNewName('')
-            setNewPhone('')
+            const newPerson = {name: newName, number: newPhone}
+            phonebookService.addPerson(newPerson)
+                .then(response => {
+                    setPersons(persons.concat(response.data))
+                    setNewName('')
+                    setNewPhone('')
+                })
+                .catch(error => alert(error))
+
+        }
+    }
+
+    const deletePerson = (deletePerson) => {
+        const confirmDelete = window.confirm(`Delete ${deletePerson.name}?`)
+        if (confirmDelete) {
+            phonebookService.deletePerson(deletePerson)
+                .then(response => {
+                    setPersons(persons.filter(person => person.id !== deletePerson.id))
+                })
+                .catch(error => alert(error))
         }
     }
 
     useEffect(() => {
-        axios.get('http://localhost:3001/persons')
-            .then(response => setPersons(response.data))
+        phonebookService.getAll()
+            .then(persons => setPersons(persons))
+            .catch(error => alert(error))
     }, [])
 
     return (
@@ -43,7 +61,7 @@ const App = () => {
                 handlePhoneChange={handlePhoneChange}
                 submitNewPhone={submitNewName}/>
             <h2>Numbers</h2>
-            <Persons persons={persons} filter={filter}/>
+            <Persons persons={persons} filter={filter} handleDelete={deletePerson}/>
         </div>
     )
 }
