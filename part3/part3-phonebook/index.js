@@ -26,6 +26,14 @@ let persons = [
     }
 ]
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+function generateId() {
+    return getRandomInt(Number.MAX_SAFE_INTEGER)
+}
+
 app.get('/info', (req, res) => {
     const count = persons.length
     res.send(`
@@ -38,6 +46,25 @@ app.get('/info', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    if (!body.name) {
+        return res.status(400).json({'error': 'Name required'})
+    }
+    if (!body.number) {
+        return res.status(400).json({'error': 'Number required'})
+    }
+
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+    persons = persons.concat(person)
+
+    res.json(person)
 })
 
 app.get('/api/persons/:id', (req, res) => {
