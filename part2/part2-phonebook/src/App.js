@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
-import Notification from './components/Notification'
 import phonebookService from './services/phonebook'
+import Notification from './components/Notification'
 
 const App = () => {
     const [ persons, setPersons ] = useState([])
@@ -11,14 +11,27 @@ const App = () => {
     const [ newPhone, setNewPhone ] = useState('')
     const [ filter, setFilter ] = useState('')
     const [ notification, setNotification ] = useState(null)
+    const [ error, setError ] = useState(null)
 
     const handleNameChange = (event) => setNewName(event.target.value)
     const handlePhoneChange = (event) => setNewPhone(event.target.value)
     const handleFilterChange = (event) => setFilter(event.target.value)
 
     const showNotification = (message) => {
+        setError(null)
         setNotification(message)
         setTimeout(() => setNotification(null), 3000)
+    }
+
+    const showError = (error) => {
+        setNotification(null)
+
+        if (error.response) {
+            if (error.response.status === 404) {
+                setError(`${newName} not found in the phonebook`)
+                setTimeout(() => setError(null), 3000)
+            }
+        }
     }
 
     const addPerson = () => {
@@ -30,7 +43,7 @@ const App = () => {
                 setNewPhone('')
                 showNotification(`Added ${newPerson.name}`)
             })
-            .catch(error => alert(error))
+            .catch(error => showError(error))
     }
 
     const updatePerson = (existingPerson) => {
@@ -45,7 +58,9 @@ const App = () => {
                     setNewPhone('')
                     showNotification(`Updated ${newPerson.name}`)
                 })
-                .catch(error => alert(error))
+                .catch(error => {
+                    showError(error)
+                })
         }
     }
 
@@ -65,20 +80,21 @@ const App = () => {
         if (confirmDelete) {
             phonebookService.deletePerson(deletePerson)
                 .then(_ => setPersons(persons.filter(person => person.id !== deletePerson.id)))
-                .catch(error => alert(error))
+                .catch(error => showError(error))
         }
     }
 
     useEffect(() => {
         phonebookService.getAll()
             .then(persons => setPersons(persons))
-            .catch(error => alert(error))
+            .catch(error => showError(error))
     }, [])
 
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={notification}/>
+            <Notification message={notification} isError={false}/>
+            <Notification message={error} isError={true}/>
             <Filter handleFilterChange={handleFilterChange}/>
             <h2>Add New</h2>
             <Form
