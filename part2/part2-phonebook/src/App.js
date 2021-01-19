@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import phonebookService from './services/phonebook'
 import Form from './components/Form'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
-import phonebookService from './services/phonebook'
 import Notification from './components/Notification'
 
 const App = () => {
@@ -51,6 +51,7 @@ const App = () => {
             `${existingPerson.name} is already in the phonebook. Replace the old number with a new one?`)
         if (shouldUpdatePerson) {
             const newPerson = { ...existingPerson, number: newPhone }
+            console.log("updating", newPerson)
             phonebookService.updatePerson(newPerson)
                 .then(updatedPerson => {
                     setPersons(persons.map(person => person.id === updatedPerson.id ? newPerson : person))
