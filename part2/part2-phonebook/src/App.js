@@ -25,11 +25,12 @@ const App = () => {
 
     const showError = (error) => {
         setNotification(null)
-
         if (error.response) {
             if (error.response.status === 404) {
                 setError(`${newName} not found in the phonebook`)
                 setTimeout(() => setError(null), 3000)
+            } else {
+                setError(error.response.data.error)
             }
         }
     }
@@ -43,7 +44,9 @@ const App = () => {
                 setNewPhone('')
                 showNotification(`Added ${newPerson.name}`)
             })
-            .catch(error => showError(error))
+            .catch(error => {
+                showError(error)
+            })
     }
 
     const updatePerson = (existingPerson) => {
@@ -59,9 +62,7 @@ const App = () => {
                     setNewPhone('')
                     showNotification(`Updated ${newPerson.name}`)
                 })
-                .catch(error => {
-                    showError(error)
-                })
+                .catch(error => showError(error))
         }
     }
 
