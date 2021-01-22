@@ -66,7 +66,7 @@ test('dummy returns 1', () => {
     expect(result).toBe(1)
 })
 
-describe('totalLikes', () => {
+describe('total likes', () => {
     test('one blog, 5 likes', () => {
         const result = listHelper.totalLikes(oneBlog)
         expect(result).toBe(5)
@@ -80,5 +80,27 @@ describe('totalLikes', () => {
     test('no blogs, 0 likes', () => {
         const result = listHelper.totalLikes(noBlogs)
         expect(result).toBe(0)
+    })
+});
+
+describe('favourite blog', function () {
+    test('one blog', () => {
+        const result = listHelper.favouriteBlog(oneBlog)
+        expect(result).toEqual(oneBlog[0])
+    })
+
+    test('5 blogs', () => {
+        const result = listHelper.favouriteBlog(blogs)
+        expect(result).toEqual(blogs[2])
+    })
+
+    test('no blogs', () => {
+        const result = listHelper.favouriteBlog(noBlogs)
+        expect(result).toBe(null)
+    })
+
+    test('null blogs', () => {
+        const result = listHelper.favouriteBlog(null)
+        expect(result).toBe(null)
     })
 });
