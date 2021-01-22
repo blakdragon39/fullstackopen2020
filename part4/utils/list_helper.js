@@ -33,9 +33,29 @@ const mostBlogs = (blogs) => {
     }
 }
 
+const mostLikes = (blogs) => {
+    if (!blogs || blogs.length == 0) return null
+
+    const groupedAuthorBlogs = _.toArray(_.groupBy(blogs, blog => blog.author))
+
+    let authorLikes = []
+    groupedAuthorBlogs.forEach(authorBlogs => {
+        const likes = authorBlogs
+            .map(blog => blog.likes)
+            .reduce((sum, likes) => sum + likes)
+        authorLikes = authorLikes.concat({
+            author: authorBlogs[0].author,
+            likes: likes
+        })
+    })
+
+    return _.maxBy(authorLikes, authorLike => authorLike.likes)
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favouriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
