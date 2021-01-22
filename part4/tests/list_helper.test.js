@@ -83,7 +83,7 @@ describe('total likes', () => {
     })
 });
 
-describe('favourite blog', function () {
+describe('favourite blog', () => {
     test('one blog', () => {
         const result = listHelper.favouriteBlog(oneBlog)
         expect(result).toEqual(oneBlog[0])
@@ -104,3 +104,10 @@ describe('favourite blog', function () {
         expect(result).toBe(null)
     })
 });
+
+describe('most blogs', () => {
+    test('5 blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        console.log(result)
+    })
+})
