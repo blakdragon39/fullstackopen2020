@@ -56,10 +56,14 @@ test('add blog', async () => {
         likes: 0
     }
 
-    await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+    const postResponse = await api.post('/api/blogs').send(newBlog)
+    const postedBlog = postResponse.body
+
+    expect(postResponse.statusCode).toBe(200)
+    expect(postedBlog.title === newBlog.title)
+    expect(postedBlog.author === newBlog.author)
+    expect(postedBlog.url === newBlog.url)
+    expect(postedBlog.likes === newBlog.likes)
 
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(initialBlogs.length + 1)
