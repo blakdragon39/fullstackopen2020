@@ -53,7 +53,7 @@ test('add blog', async () => {
         title: 'Test Title 3',
         author: 'Test Author3',
         url: 'http://url3.com',
-        likes: 0
+        likes: 3
     }
 
     const postResponse = await api.post('/api/blogs').send(newBlog)
@@ -65,20 +65,20 @@ test('add blog', async () => {
     expect(postedBlog.url === newBlog.url)
     expect(postedBlog.likes === newBlog.likes)
 
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(initialBlogs.length + 1)
+    const getResponse = await api.get('/api/blogs')
+    expect(getResponse.body).toHaveLength(initialBlogs.length + 1)
 })
 
-// test('empty blog not added', async () => {
-//     const newBlog = {}
-//
-//     await api.post('/api/blogs')
-//         .send(newBlog)
-//         .expect(400)
-//
-//     const response = await api.get('/api/blogs')
-//     const blogs = response.body.map(response => response.content)
-//     expect(blogs).toHaveLength(initialBlogs.length)
-// })
+test('missing likes default to 0', async () => {
+    const newBlog = {
+        title: 'Test Title 4',
+        author: 'Test Author4',
+        url: 'http://url4.com',
+    }
+
+    const postResponse = await api.post('/api/blogs').send(newBlog)
+    const postedBlog = postResponse.body
+    expect(postedBlog.likes).toBe(0)
+})
 
 afterAll(() => mongoose.connection.close())
