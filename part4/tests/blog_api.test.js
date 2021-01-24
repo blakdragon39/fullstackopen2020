@@ -81,4 +81,26 @@ test('missing likes default to 0', async () => {
     expect(postedBlog.likes).toBe(0)
 })
 
+test('missing title fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const newBlog = {
+        author: 'Test Author5',
+        url: 'http://url5.com',
+    }
+    const postResponse = await api.post('/api/blogs').send(newBlog)
+    expect(postResponse.statusCode).toBe(400)
+})
+
+test('missing url fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const newBlog = {
+        title: 'Title 6',
+        author: 'Test Author6'
+    }
+    const postResponse = await api.post('/api/blogs').send(newBlog)
+    expect(postResponse.statusCode).toBe(400)
+})
+
 afterAll(() => mongoose.connection.close())
