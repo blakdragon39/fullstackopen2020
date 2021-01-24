@@ -36,10 +36,16 @@ test('blogs returns json', async () => {
         .expect('Content-Type', /application\/json/)
 })
 
-test('two blogs', async() => {
+test('two blogs', async () => {
     const response = await api.get('/api/blogs')
-    const blogs = response.body.map(response => response.content)
-    expect(blogs).toHaveLength(initialBlogs.length)
+    expect(response.body).toHaveLength(initialBlogs.length)
+})
+
+test('blog has id property', async () => {
+    const response = await api.get('/api/blogs')
+    const blogs = response.body
+
+    expect(blogs[0].id).toBeDefined()
 })
 
 test('add blog', async () => {
@@ -56,8 +62,7 @@ test('add blog', async () => {
         .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/blogs')
-    const blogs = response.body.map(response => response.content)
-    expect(blogs).toHaveLength(initialBlogs.length + 1)
+    expect(response.body).toHaveLength(initialBlogs.length + 1)
 })
 
 // test('empty blog not added', async () => {
