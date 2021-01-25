@@ -7,6 +7,10 @@ userRouter.post('/', async (req, res, next) => {
     const displayName = req.body.displayName
     const password = req.body.password
 
+    if (password.length < 3) {
+        res.status(403).json({ error: 'Password must be at least 3 characters long'})
+    }
+
     const passwordHash = await bcrypt.hash(password, 10)
 
     const user = new User({
@@ -15,9 +19,16 @@ userRouter.post('/', async (req, res, next) => {
         passwordHash: passwordHash
     })
 
-    const savedUser = await user.save()
-
-    res.json(savedUser)
+    try {
+        const savedUser = await user.save()
+        res.json(savedUser)
+    } catch (err) {
+        if (err.name === 'MongoError' && err.code === 11000) {
+            res.status(400).json({ error: 'Username already exists' })
+        } else {
+            throw err
+        }
+    }
 })
 
 userRouter.get('/', async (req, res, next) => {

@@ -9,7 +9,7 @@ blogRouter.get('/', async (req, res, next) => {
 blogRouter.post('/', async (req, res, next) => {
     const blog = new Blog(req.body)
     const savedBlog = await blog.save()
-    res.status(200).json(savedBlog)
+    res.json(savedBlog)
 })
 
 blogRouter.delete('/:id', async (req, res, next) => {
@@ -23,7 +23,7 @@ blogRouter.put('/:id', async (req, res, next) => {
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
-    res.status(200).json(updatedBlog)
+    res.json(updatedBlog)
 })
 
 module.exports = blogRouter

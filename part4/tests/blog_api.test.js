@@ -2,29 +2,15 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
+const testHelper = require('./blog_test_helper')
 
 const Blog = require('../models/blog')
-
-const initialBlogs = [
-    {
-        title: 'Test Title',
-        author: 'Test Author',
-        url: 'http://url.com',
-        likes: 5
-    },
-    {
-        title: 'Test Title 2',
-        author: 'Test Author2',
-        url: 'http://url2.com',
-        likes: 3
-    }
-]
 
 beforeEach(async () => {
     await Blog.deleteMany()
 
-    const blog1 = new Blog(initialBlogs[0])
-    const blog2 = new Blog(initialBlogs[1])
+    const blog1 = new Blog(testHelper.initialBlogs[0])
+    const blog2 = new Blog(testHelper.initialBlogs[1])
 
     await blog1.save()
     await blog2.save()
@@ -39,7 +25,7 @@ describe('initial blogs', () => {
 
     test('two blogs', async () => {
         const response = await api.get('/api/blogs')
-        expect(response.body).toHaveLength(initialBlogs.length)
+        expect(response.body).toHaveLength(testHelper.initialBlogs.length)
     })
 
     test('blog has ids correct', async () => {
@@ -104,26 +90,22 @@ describe('change blogs', () => {
         expect(postedBlog.url === newBlog.url)
         expect(postedBlog.likes === newBlog.likes)
 
-        const getResponse = await api.get('/api/blogs')
-        expect(getResponse.body).toHaveLength(initialBlogs.length + 1)
+        const dbBlogs = await testHelper.getDbBlogs()
+        expect(dbBlogs).toHaveLength(testHelper.initialBlogs.length + 1)
     })
 
     test('delete blog', async () => {
-        let getResponse = await api.get('/api/blogs')
-        let blogs = getResponse.body
+        let blogs = await testHelper.getDbBlogs()
 
         const deleteResponse = await api.delete(`/api/blogs/${blogs[0].id}`)
         expect(deleteResponse.statusCode).toBe(204)
 
-        getResponse = await api.get('/api/blogs')
-        blogs = getResponse.body
-
-        expect(blogs.length).toBe(1)
+        blogs = await testHelper.getDbBlogs()
+        expect(blogs).toHaveLength(1)
     })
 
     test('update blog', async () => {
-        let getResponse = await api.get('/api/blogs')
-        let blogs = getResponse.body
+        let blogs = await testHelper.getDbBlogs()
 
         const newBlog = {
             likes: 989
@@ -133,10 +115,9 @@ describe('change blogs', () => {
         expect(putResponse.statusCode).toBe(200)
         expect(putResponse.body.likes).toBe(newBlog.likes)
 
-        getResponse = await api.get('/api/blogs/')
-        blogs = getResponse.body
+        blogs = await testHelper.getDbBlogs()
 
-        expect(blogs.length).toBe(2)
+        expect(blogs).toHaveLength(testHelper.initialBlogs.length)
         expect(blogs[0].likes).toBe(newBlog.likes)
     })
 })
