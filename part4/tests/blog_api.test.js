@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
-const testHelper = require('./blog_test_helper')
+const testHelper = require('./helpers/blog_test_helper')
 
 const Blog = require('../models/blog')
 
@@ -44,8 +44,9 @@ describe('failure states', () => {
             author: 'Test Author5',
             url: 'http://url5.com',
         }
-        const postResponse = await api.post('/api/blogs').send(newBlog)
-        expect(postResponse.statusCode).toBe(400)
+        await api.post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
     })
 
     test('missing url fails', async () => {
@@ -55,8 +56,10 @@ describe('failure states', () => {
             title: 'Title 6',
             author: 'Test Author6'
         }
-        const postResponse = await api.post('/api/blogs').send(newBlog)
-        expect(postResponse.statusCode).toBe(400)
+
+        await api.post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
     })
 })
 
