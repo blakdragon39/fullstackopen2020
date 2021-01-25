@@ -30,77 +30,96 @@ beforeEach(async () => {
     await blog2.save()
 })
 
-test('blogs returns json', async () => {
-    await api.get('/api/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+describe('initial blogs', () => {
+    test('blogs returns json', async () => {
+        await api.get('/api/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    })
+
+    test('two blogs', async () => {
+        const response = await api.get('/api/blogs')
+        expect(response.body).toHaveLength(initialBlogs.length)
+    })
+
+    test('blog has ids correct', async () => {
+        const response = await api.get('/api/blogs')
+        const blogs = response.body
+
+        expect(blogs[0].id).toBeDefined()
+    })
 })
 
-test('two blogs', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(initialBlogs.length)
+describe('failure states', () => {
+    test('missing title fails', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {})
+
+        const newBlog = {
+            author: 'Test Author5',
+            url: 'http://url5.com',
+        }
+        const postResponse = await api.post('/api/blogs').send(newBlog)
+        expect(postResponse.statusCode).toBe(400)
+    })
+
+    test('missing url fails', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {})
+
+        const newBlog = {
+            title: 'Title 6',
+            author: 'Test Author6'
+        }
+        const postResponse = await api.post('/api/blogs').send(newBlog)
+        expect(postResponse.statusCode).toBe(400)
+    })
 })
 
-test('blog has id property', async () => {
-    const response = await api.get('/api/blogs')
-    const blogs = response.body
+describe('change blogs', () => {
+    test('missing likes default to 0', async () => {
+        const newBlog = {
+            title: 'Test Title 4',
+            author: 'Test Author4',
+            url: 'http://url4.com'
+        }
 
-    expect(blogs[0].id).toBeDefined()
-})
+        const postResponse = await api.post('/api/blogs').send(newBlog)
+        const postedBlog = postResponse.body
+        expect(postedBlog.likes).toBe(0)
+    })
 
-test('add blog', async () => {
-    const newBlog = {
-        title: 'Test Title 3',
-        author: 'Test Author3',
-        url: 'http://url3.com',
-        likes: 3
-    }
+    test('add blog', async () => {
+        const newBlog = {
+            title: 'Test Title 3',
+            author: 'Test Author3',
+            url: 'http://url3.com',
+            likes: 3
+        }
 
-    const postResponse = await api.post('/api/blogs').send(newBlog)
-    const postedBlog = postResponse.body
+        const postResponse = await api.post('/api/blogs').send(newBlog)
+        const postedBlog = postResponse.body
 
-    expect(postResponse.statusCode).toBe(200)
-    expect(postedBlog.title === newBlog.title)
-    expect(postedBlog.author === newBlog.author)
-    expect(postedBlog.url === newBlog.url)
-    expect(postedBlog.likes === newBlog.likes)
+        expect(postResponse.statusCode).toBe(200)
+        expect(postedBlog.title === newBlog.title)
+        expect(postedBlog.author === newBlog.author)
+        expect(postedBlog.url === newBlog.url)
+        expect(postedBlog.likes === newBlog.likes)
 
-    const getResponse = await api.get('/api/blogs')
-    expect(getResponse.body).toHaveLength(initialBlogs.length + 1)
-})
+        const getResponse = await api.get('/api/blogs')
+        expect(getResponse.body).toHaveLength(initialBlogs.length + 1)
+    })
 
-test('missing likes default to 0', async () => {
-    const newBlog = {
-        title: 'Test Title 4',
-        author: 'Test Author4',
-        url: 'http://url4.com',
-    }
+    test('delete blog', async () => {
+        let getResponse = await api.get('/api/blogs')
+        let blogs = getResponse.body
 
-    const postResponse = await api.post('/api/blogs').send(newBlog)
-    const postedBlog = postResponse.body
-    expect(postedBlog.likes).toBe(0)
-})
+        const deleteResponse = await api.delete(`/api/blogs/${blogs[0].id}`)
+        expect(deleteResponse.statusCode).toBe(204)
 
-test('missing title fails', async () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+        getResponse = await api.get('/api/blogs')
+        blogs = getResponse.body
 
-    const newBlog = {
-        author: 'Test Author5',
-        url: 'http://url5.com',
-    }
-    const postResponse = await api.post('/api/blogs').send(newBlog)
-    expect(postResponse.statusCode).toBe(400)
-})
-
-test('missing url fails', async () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-
-    const newBlog = {
-        title: 'Title 6',
-        author: 'Test Author6'
-    }
-    const postResponse = await api.post('/api/blogs').send(newBlog)
-    expect(postResponse.statusCode).toBe(400)
+        expect(blogs.length).toBe(1)
+    })
 })
 
 afterAll(() => mongoose.connection.close())
