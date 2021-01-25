@@ -120,6 +120,25 @@ describe('change blogs', () => {
 
         expect(blogs.length).toBe(1)
     })
+
+    test('update blog', async () => {
+        let getResponse = await api.get('/api/blogs')
+        let blogs = getResponse.body
+
+        const newBlog = {
+            likes: 989
+        }
+
+        const putResponse = await api.put(`/api/blogs/${blogs[0].id}`).send(newBlog)
+        expect(putResponse.statusCode).toBe(200)
+        expect(putResponse.body.likes).toBe(newBlog.likes)
+
+        getResponse = await api.get('/api/blogs/')
+        blogs = getResponse.body
+
+        expect(blogs.length).toBe(2)
+        expect(blogs[0].likes).toBe(newBlog.likes)
+    })
 })
 
 afterAll(() => mongoose.connection.close())
