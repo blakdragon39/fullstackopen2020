@@ -1,5 +1,3 @@
-const getUserFrom = require('../utils/auth')
-
 const blogRouter = require('express').Router()
 
 const Blog = require('../models/blog')
@@ -11,7 +9,7 @@ blogRouter.get('/', async (req, res, next) => {
 })
 
 blogRouter.post('/', async (req, res, next) => {
-    const user =  await getUserFrom(req)
+    const user =  req.user
 
     const blog = new Blog(req.body)
     blog.user = user

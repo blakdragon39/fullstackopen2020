@@ -1,10 +1,16 @@
 const logger = require('./logger')
+const getUserFrom = require('./auth')
 
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)
     logger.info('Body:  ', request.body)
     logger.info('---')
+    next()
+}
+
+const userExtractor = async (request, response, next) => {
+    request.user = await getUserFrom(request)
     next()
 }
 
@@ -31,5 +37,6 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
     requestLogger,
     unknownEndpoint,
-    errorHandler
+    errorHandler,
+    userExtractor
 }
