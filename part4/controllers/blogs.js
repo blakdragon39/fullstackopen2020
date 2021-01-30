@@ -11,6 +11,11 @@ blogRouter.get('/', async (req, res, next) => {
 blogRouter.post('/', async (req, res, next) => {
     const user =  req.user
 
+    if (!user) {
+        res.status(401).json({ error: 'Invalid user'})
+        return
+    }
+
     const blog = new Blog(req.body)
     blog.user = user
 
@@ -23,7 +28,18 @@ blogRouter.post('/', async (req, res, next) => {
 })
 
 blogRouter.delete('/:id', async (req, res, next) => {
-    await Blog.findByIdAndRemove(req.params.id)
+    const user = req.user
+
+    if (!user) {
+        return res.status(401).json({ error: 'Invalid user'})
+    }
+
+    const blog = await Blog.findById(req.params.id)
+
+    if (blog.user.toString() !== user.id) {
+        return res.status(401).json({ error: 'Delete unauthorized' })
+    }
+
     res.status(204).end()
 })
 
