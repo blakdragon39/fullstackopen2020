@@ -1,7 +1,8 @@
+const getUserFrom = require('../utils/auth')
+
 const blogRouter = require('express').Router()
 
 const Blog = require('../models/blog')
-const User = require('../models/user')
 
 blogRouter.get('/', async (req, res, next) => {
     const blogs = await Blog.find({})
@@ -10,7 +11,7 @@ blogRouter.get('/', async (req, res, next) => {
 })
 
 blogRouter.post('/', async (req, res, next) => {
-    const user =  (await User.find({}))[0] //todo
+    const user =  await getUserFrom(req)
 
     const blog = new Blog(req.body)
     blog.user = user
