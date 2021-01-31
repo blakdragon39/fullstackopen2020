@@ -36,20 +36,33 @@ blogRouter.delete('/:id', async (req, res, next) => {
 
     const blog = await Blog.findById(req.params.id)
 
-    if (blog.user.toString() !== user.id) {
+    if (blog.user.toString() !== user.id.toString()) {
         return res.status(401).json({ error: 'Delete unauthorized' })
     }
 
+    await blog.remove()
     res.status(204).end()
 })
 
 blogRouter.put('/:id', async (req, res, next) => {
-    const blog = {
-        likes: req.body.likes
+    const user = req.user
+    const blog = await Blog.findById(req.params.id)
+
+    if (!user) {
+        return res.status(401).json({ error: 'Invalid user'})
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
-    res.json(updatedBlog)
+    if (!blog) {
+        return res.status(404).json( { error: 'Blog not found' })
+    }
+
+    if (blog.user.toString() !== user.id.toString()) {
+        return res.status(401).json({ error: 'Put unauthorized' })
+    }
+
+    blog.likes = req.body.likes
+    await blog.save()
+    res.json(blog)
 })
 
 module.exports = blogRouter

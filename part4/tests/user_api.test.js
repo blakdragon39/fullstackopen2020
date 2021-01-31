@@ -18,9 +18,9 @@ beforeEach(async () => {
 
 test('create user', async () => {
     const user = {
-        'username': 'username',
-        'displayName': 'Test 3',
-        'password': 'password'
+        username: 'username',
+        displayName: 'Test 3',
+        password: 'password'
     }
 
     await api.post('/api/users')
@@ -29,14 +29,6 @@ test('create user', async () => {
 
     const users = await testHelper.getDbUsers()
     expect(users).toHaveLength(testHelper.initialUsers.length + 1)
-
-    // const body = {
-    //     'username': 'username',
-    //     'password': 'password'
-    // }
-    //
-    // const response = await api.post('/api/login').send(body)
-    // console.log(response.body)
 })
 
 test('password too short', async () => {
