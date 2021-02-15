@@ -20,24 +20,24 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-    console.log('state now: ', state)
-    console.log('action', action)
-
+    let newState
     switch (action.type) {
         case 'VOTE':
-            return state.map(anecdote => {
+            newState = state.map(anecdote => {
                 if (anecdote.id === action.data.id) {
                     return { ...anecdote, votes: anecdote.votes + 1 }
                 } else {
                     return anecdote
                 }
             })
+            break
         case 'ADD':
             const newAnecdote = asObject(action.data.content)
-            return state.concat(newAnecdote)
-        default:
-            return state
+            newState = state.concat(newAnecdote)
+            break
     }
+
+    return newState ? newState.sort((anec1, anec2) => anec2.votes - anec1.votes) : state
 }
 
 export default reducer
