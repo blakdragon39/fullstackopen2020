@@ -1,3 +1,17 @@
+export const addVote = id => {
+    return {
+        type: 'VOTE',
+        data: { id }
+    }
+}
+
+export const addAnecdote = (content) => {
+    return {
+        type: 'ADD',
+        data: { content }
+    }
+}
+
 const anecdotesAtStart = [
     'If it hurts, do it more often',
     'Adding manpower to a late software project makes it later!',
