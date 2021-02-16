@@ -39,6 +39,16 @@
       "content": "Lorem ipsum dolor sit amet",
       "votes": 0,
       "id": "zYbO_Gs"
+    },
+    {
+      "content": "This is a new anecdote",
+      "votes": 0,
+      "id": "3LpDSWW"
+    },
+    {
+      "content": "This is another new anecdote",
+      "votes": 0,
+      "id": "cYLc2Fs"
     }
   ]
 }
