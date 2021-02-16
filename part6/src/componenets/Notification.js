@@ -5,6 +5,7 @@ const Notification = () => {
     const notification = useSelector(store => store.notification)
 
     const style = {
+        display: notification ? '' : 'none',
         border: 'solid',
         padding: 10,
         borderWidth: 1

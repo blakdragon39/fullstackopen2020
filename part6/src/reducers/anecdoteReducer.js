@@ -49,9 +49,12 @@ const anecdoteReducer = (state = initialState, action) => {
             const newAnecdote = asObject(action.data.content)
             newState = state.concat(newAnecdote)
             break
+        default:
+            newState = state
+            break
     }
 
-    return newState ? newState.sort((anec1, anec2) => anec2.votes - anec1.votes) : state
+    return newState.sort((anec1, anec2) => anec2.votes - anec1.votes)
 }
 
 export default anecdoteReducer
