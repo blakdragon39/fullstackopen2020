@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initAnecdotes, addVote } from '../reducers/anecdoteReducer'
 import { setNotification, removeNotification } from '../reducers/notificationReducer'
-import anecdoteService from '../services/anecdoteService'
 
 const AnecdoteList = () => {
     const anecdotes = useSelector(state =>
@@ -12,9 +11,7 @@ const AnecdoteList = () => {
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        anecdoteService.getAll().then(newAnecdotes => dispatch(initAnecdotes(newAnecdotes)))
-    }, [dispatch])
+    useEffect(() => dispatch(initAnecdotes()), [dispatch])
 
     const style = { padding: 5 }
 
