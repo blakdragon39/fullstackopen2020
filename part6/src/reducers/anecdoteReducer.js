@@ -12,20 +12,10 @@ export const addVote = id => {
     }
 }
 
-export const addAnecdote = (content) => {
+export const addAnecdote = (anecdote) => {
     return {
         type: 'ADD_ANECDOTE',
-        data: { content }
-    }
-}
-
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-    return {
-        content: anecdote,
-        id: getId(),
-        votes: 0
+        data: { anecdote }
     }
 }
 
@@ -42,8 +32,7 @@ const anecdoteReducer = (state = [], action) => {
                 }
             })
         case 'ADD_ANECDOTE':
-            const newAnecdote = asObject(action.data.content)
-            return state.concat(newAnecdote)
+            return state.concat(action.data.anecdote)
         default:
             return state
     }
