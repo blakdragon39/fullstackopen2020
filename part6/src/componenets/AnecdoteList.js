@@ -16,7 +16,7 @@ const AnecdoteList = () => {
     const style = { padding: 5 }
 
     const vote = (anecdote) => {
-        dispatch(addVote(anecdote.id))
+        dispatch(addVote(anecdote))
         dispatch(setNotification(`Voted for ${anecdote.content}`))
         setTimeout(() => dispatch(removeNotification()), 5000)
     }

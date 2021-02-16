@@ -10,13 +10,6 @@ export const initAnecdotes = () => {
     }
 }
 
-export const addVote = id => {
-    return {
-        type: 'VOTE_ANECDOTE',
-        data: { id }
-    }
-}
-
 export const addAnecdote = (anecdote) => {
     return async (dispatch) => {
         const newAnecdote = await anecdoteService.addAnecdote(anecdote)
@@ -27,18 +20,23 @@ export const addAnecdote = (anecdote) => {
     }
 }
 
+export const addVote = (anecdote) => {
+    return async (dispatch) => {
+        const newAnecdote = await anecdoteService.voteOn(anecdote)
+        dispatch({
+            type: 'UPDATE_ANECDOTE',
+            data: { anecdote: newAnecdote }
+        })
+    }
+}
+
 const anecdoteReducer = (state = [], action) => {
     switch (action.type) {
         case 'INIT_ANECDOTES':
             return action.data
-        case 'VOTE_ANECDOTE':
-            return state.map(anecdote => {
-                if (anecdote.id === action.data.id) {
-                    return { ...anecdote, votes: anecdote.votes + 1 }
-                } else {
-                    return anecdote
-                }
-            })
+        case 'UPDATE_ANECDOTE':
+            const newAnecdote = action.data.anecdote
+            return state.map(anecdote => anecdote.id === newAnecdote.id ? newAnecdote : anecdote)
         case 'ADD_ANECDOTE':
             return state.concat(action.data.anecdote)
         default:

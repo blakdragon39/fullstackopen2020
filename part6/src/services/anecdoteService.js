@@ -16,5 +16,11 @@ const addAnecdote = async (anecdote) => {
     return response.data
 }
 
-const anecdoteService = { getAll, addAnecdote }
+const voteOn = async (anecdote) => {
+    const body = { ...anecdote, votes: anecdote.votes + 1 }
+    const response = await axios.put(`${baseUrl}/${anecdote.id}`, body)
+    return response.data
+}
+
+const anecdoteService = { getAll, addAnecdote, voteOn }
 export default anecdoteService
