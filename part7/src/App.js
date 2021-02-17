@@ -105,9 +105,9 @@ const CreateNew = ({ addNew }) => {
         <div>
             <h2>create a new anecdote</h2>
             <form onSubmit={handleSubmit}>
-                <div>content <input name='content' { ...content } /></div>
-                <div>author <input name='author' { ...author } /></div>
-                <div>url for more info <input name='info' { ...info } /></div>
+                <div>content <input name='content' { ...content.attrs } /></div>
+                <div>author <input name='author' { ...author.attrs } /></div>
+                <div>url for more info <input name='info' { ...info.attrs } /></div>
                 <button type='submit'>create</button> <button type='reset' onClick={reset}>reset</button>
             </form>
         </div>
