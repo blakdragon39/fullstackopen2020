@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch, useHistory } from 'react-router-dom'
 
 const Menu = () => {
     const padding = {
@@ -11,6 +11,20 @@ const Menu = () => {
             <Link style={padding} to='/create'>create new</Link>
             <Link style={padding} to='/about'>about</Link>
         </div>
+    )
+}
+
+const Notification = ({ notification }) => {
+    const style = {
+        display: notification ? '' : 'none',
+        borderStyle: 'solid',
+        borderWidth: 0,
+        borderRadius: 5,
+        background: '#34eb52',
+        padding: 8
+    }
+    return (
+        <div style={style}>{notification}</div>
     )
 }
 
@@ -65,14 +79,14 @@ const Footer = () => (
     </div>
 )
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew }) => {
     const [content, setContent] = useState('')
     const [author, setAuthor] = useState('')
     const [info, setInfo] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        props.addNew({
+        addNew({
             content,
             author,
             info,
@@ -104,6 +118,7 @@ const CreateNew = (props) => {
 }
 
 const App = () => {
+    const [notification, setNotification] = useState('')
     const [anecdotes, setAnecdotes] = useState([
         {
             content: 'If it hurts, do it more often',
@@ -121,11 +136,14 @@ const App = () => {
         }
     ])
 
-    const [notification, setNotification] = useState('')
+    const history = useHistory()
 
     const addNew = (anecdote) => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
         setAnecdotes(anecdotes.concat(anecdote))
+        setNotification(`Added ${anecdote.content}`)
+        setTimeout(() => setNotification(''), 10_000)
+        history.push('/')
     }
 
     const anecdoteById = (id) =>
@@ -147,6 +165,7 @@ const App = () => {
 
     return (
         <div>
+            <Notification notification={notification}/>
             <h1>Software anecdotes</h1>
             <Menu/>
 
