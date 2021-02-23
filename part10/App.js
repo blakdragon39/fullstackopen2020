@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import Button from './components/Button';
 import RepositoryList from './components/RepositoryList';
 
 const App = (props) => {
@@ -15,7 +16,7 @@ const App = (props) => {
     return (
         <View>
             <Button
-                style={styles.navigation}
+                style={styles.button}
                 title="Sign In"
                 onPress={navigateToSignIn}/>
             <RepositoryList/>
@@ -24,8 +25,8 @@ const App = (props) => {
 };
 
 const styles = StyleSheet.create({
-    navigation: {
-        margin: 16,
+    button: {
+        margin: 8,
     },
 });
 
