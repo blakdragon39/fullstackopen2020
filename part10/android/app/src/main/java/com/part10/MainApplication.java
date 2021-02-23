@@ -2,11 +2,9 @@ package com.part10;
 
 import com.part10.generated.BasePackageList;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.facebook.react.PackageList;
-import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -18,14 +16,16 @@ import java.util.Arrays;
 
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-import org.unimodules.core.interfaces.SingletonModule;
 
-public class MainApplication extends Application implements ReactApplication {
+import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.react.NavigationReactNativeHost;
+
+public class MainApplication extends NavigationApplication {
 
     private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(new BasePackageList().getPackageList(), null);
 
     private final ReactNativeHost mReactNativeHost =
-            new ReactNativeHost(this) {
+            new NavigationReactNativeHost(this) {
                 @Override
                 public boolean getUseDeveloperSupport() {
                     return BuildConfig.DEBUG;

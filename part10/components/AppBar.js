@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
 import theme from '../theme';
 import Text from './Text';
 
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: theme.colors.textPrimary,
     },
     text: {
@@ -16,7 +14,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const AppBarTab = ({ text }) => (
+const AppBarTab = ({ text, screenComponent }) => (
     <TouchableWithoutFeedback>
         <Text
             style={styles.text}
@@ -31,6 +29,7 @@ const AppBar = () => {
     return (
         <View style={styles.container}>
             <AppBarTab text="Repositories" />
+            <AppBarTab text="Sign In" />
         </View>
     );
 };
