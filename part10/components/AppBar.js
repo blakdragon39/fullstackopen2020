@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     },
 });
 
-const AppBarTab = ({ text }) => (
-    <TouchableHighlight onPress={() => {}}>
+const AppBarTab = ({ onPress, text }) => (
+    <TouchableHighlight onPress={onPress}>
         <Text
             style={styles.tab}
             fontWeight="bold"
