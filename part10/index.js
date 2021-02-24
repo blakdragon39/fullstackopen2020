@@ -27,11 +27,28 @@ Navigation.setDefaultOptions({
 Navigation.events().registerAppLaunchedListener(() => {
     Navigation.setRoot({
         root: {
-            stack: {
+            bottomTabs: {
                 children: [
                     {
-                        component: {
-                            name: 'HomeScreen',
+                        stack: {
+                            children: [
+                                {
+                                    component: {
+                                        name: 'HomeScreen',
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        stack: {
+                            children: [
+                                {
+                                    component: {
+                                        name: 'SignInScreen',
+                                    },
+                                },
+                            ],
                         },
                     },
                 ],

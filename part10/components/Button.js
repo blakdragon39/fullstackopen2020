@@ -21,7 +21,7 @@ const Button = ({ title, color, style, ...props }) => {
     ];
 
     return (
-        <TouchableOpacity onPress={onPress} style={buttonStyle} {...props}>
+        <TouchableOpacity style={buttonStyle} {...props}>
             <Text style={styles.text}>{title}</Text>
         </TouchableOpacity>
     );
