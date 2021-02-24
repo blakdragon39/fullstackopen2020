@@ -1,7 +1,5 @@
 package com.part10;
 
-import com.part10.generated.BasePackageList;
-
 import android.app.Application;
 import android.content.Context;
 
@@ -11,14 +9,14 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Arrays;
+import com.part10.generated.BasePackageList;
 
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-import org.unimodules.core.interfaces.SingletonModule;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 

@@ -8,6 +8,8 @@ target 'part10' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-receive-sharing-intent', :path => '../node_modules/react-native-receive-sharing-intent'
+
   target 'part10Tests' do
     inherit! :complete
     # Pods for testing

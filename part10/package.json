@@ -14,6 +14,7 @@
     "hoist-non-react-statics": "^3.3.2",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-receive-sharing-intent": "^1.1.0",
     "react-native-unimodules": "^0.12.0",
     "react-router-native": "^5.2.0"
   },
