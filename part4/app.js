@@ -9,6 +9,7 @@ const app = express()
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const commentsRouter = require('./controllers/comments')
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
@@ -18,6 +19,7 @@ app.use(middleware.requestLogger)
 app.use(middleware.userExtractor)
 
 app.use('/api/users', userRouter)
+app.use('/api/blogs/', commentsRouter)
 app.use('/api/blogs', blogRouter)
 app.use('/api/login', loginRouter)
 
